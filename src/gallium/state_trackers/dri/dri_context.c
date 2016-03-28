@@ -216,6 +216,7 @@ dri_make_current(__DRIcontext * cPriv,
 		 __DRIdrawable * driDrawPriv,
 		 __DRIdrawable * driReadPriv)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    /* dri_util.c ensures cPriv is not null */
    struct dri_context *ctx = dri_context(cPriv);
    struct dri_drawable *draw = dri_drawable(driDrawPriv);

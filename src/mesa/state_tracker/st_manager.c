@@ -181,22 +181,26 @@ static void
 st_framebuffer_validate(struct st_framebuffer *stfb,
                         struct st_context *st)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    struct pipe_resource *textures[ST_ATTACHMENT_COUNT];
    uint width, height;
    unsigned i;
    boolean changed = FALSE;
    int32_t new_stamp;
 
+   debug_printf("Checking incomplete fb\n");
    /* Check for incomplete framebuffers (e.g. EGL_KHR_surfaceless_context) */
    if (!stfb->iface)
       return;
 
+   debug_printf("Checking stamp\n");
    new_stamp = p_atomic_read(&stfb->iface->stamp);
    if (stfb->iface_stamp == new_stamp)
       return;
 
    /* validate the fb */
    do {
+	   debug_printf("Validating framebuffer\n");
       if (!stfb->iface->validate(&st->iface, stfb->iface, stfb->statts,
 				 stfb->num_statts, textures))
 	 return;
@@ -752,6 +756,7 @@ st_api_make_current(struct st_api *stapi, struct st_context_iface *stctxi,
    struct st_framebuffer *stdraw, *stread;
    boolean ret;
 
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
    _glapi_check_multithread();
 
    if (st) {

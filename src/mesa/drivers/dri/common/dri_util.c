@@ -47,6 +47,7 @@
 #include "main/version.h"
 #include "main/errors.h"
 #include "main/macros.h"
+#include "util/u_debug.h"
 
 const char __dri2ConfigOptions[] =
    DRI_CONF_BEGIN
@@ -513,6 +514,7 @@ static int driBindContext(__DRIcontext *pcp,
     ** calling driUnbindContext.
     */
 
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     if (!pcp)
 	return GL_FALSE;
 
@@ -719,7 +721,12 @@ driGetAPIMask(__DRIscreen *screen)
 static void
 driSwapBuffers(__DRIdrawable *pdp)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     assert(pdp->driScreenPriv->swrast_loader);
+	debug_printf("pdp: %x\n", pdp);
+	debug_printf("pdp->driScreenPriv: %x\n", pdp->driScreenPriv);
+	debug_printf("pdp->driScreenPriv->driver: %x\n", pdp->driScreenPriv->driver);
+	debug_printf("pdp->driScreenPriv->driver->SwapBuffers: %x\n", pdp->driScreenPriv->driver->SwapBuffers);
 
     pdp->driScreenPriv->driver->SwapBuffers(pdp);
 }

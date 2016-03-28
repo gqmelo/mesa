@@ -44,6 +44,7 @@
 #include "renderbuffer.h"
 #include "texobj.h"
 #include "glformats.h"
+#include "util/u_debug.h"
 
 
 
@@ -240,6 +241,7 @@ void
 _mesa_reference_framebuffer_(struct gl_framebuffer **ptr,
                              struct gl_framebuffer *fb)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    if (*ptr) {
       /* unreference old renderbuffer */
       GLboolean deleteFlag = GL_FALSE;

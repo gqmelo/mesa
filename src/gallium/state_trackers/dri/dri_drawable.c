@@ -60,6 +60,7 @@ dri_st_framebuffer_validate(struct st_context_iface *stctx,
       drawable->stvis.samples > 1 ? drawable->msaa_textures
                                   : drawable->textures;
 
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
    statt_mask = 0x0;
    for (i = 0; i < count; i++)
       statt_mask |= (1 << statts[i]);
@@ -165,6 +166,7 @@ fail:
 void
 dri_destroy_buffer(__DRIdrawable * dPriv)
 {
+   debug_printf("dri_destroy_buffer\n");
    struct dri_drawable *drawable = dri_drawable(dPriv);
    int i;
 
