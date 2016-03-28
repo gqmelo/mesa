@@ -181,22 +181,29 @@ static void
 st_framebuffer_validate(struct st_framebuffer *stfb,
                         struct st_context *st)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    struct pipe_resource *textures[ST_ATTACHMENT_COUNT];
    uint width, height;
    unsigned i;
    boolean changed = FALSE;
    int32_t new_stamp;
 
+   debug_printf("    stfb: %x\n", stfb);
+   debug_printf("    Checking incomplete fb\n");
    /* Check for incomplete framebuffers (e.g. EGL_KHR_surfaceless_context) */
    if (!stfb->iface)
       return;
 
+   debug_printf("    Checking stamp\n");
    new_stamp = p_atomic_read(&stfb->iface->stamp);
+   debug_printf("    stfb->iface_stamp: %i\n", stfb->iface_stamp);
+   debug_printf("    new_stamp: %i\n", new_stamp);
    if (stfb->iface_stamp == new_stamp)
       return;
 
    /* validate the fb */
    do {
+	   debug_printf("    Validating framebuffer\n");
       if (!stfb->iface->validate(&st->iface, stfb->iface, stfb->statts,
 				 stfb->num_statts, textures))
 	 return;
@@ -413,6 +420,9 @@ static struct st_framebuffer *
 st_framebuffer_create(struct st_context *st,
                       struct st_framebuffer_iface *stfbi)
 {
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
+   debug_printf("    st: %x\n", st);
+   debug_printf("    stfbi: %x\n", stfbi);
    struct st_framebuffer *stfb;
    struct gl_config mode;
    gl_buffer_index idx;
@@ -460,6 +470,7 @@ st_framebuffer_create(struct st_context *st,
 
    _mesa_initialize_window_framebuffer(&stfb->Base, &mode);
 
+   debug_printf("    Assigning stfb->iface to: %x\n", stfbi);
    stfb->iface = stfbi;
    stfb->iface_stamp = p_atomic_read(&stfbi->stamp) - 1;
 
@@ -784,16 +795,27 @@ st_framebuffer_reuse_or_create(struct st_context *st,
                                struct gl_framebuffer *fb,
                                struct st_framebuffer_iface *stfbi)
 {
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
+   debug_printf("    fb: %x\n", fb);
+   debug_printf("    stfbi: %x\n", stfbi);
    struct st_framebuffer *cur = st_ws_framebuffer(fb), *stfb = NULL;
+   debug_printf("    cur: %x\n", cur);
+   if (cur) {
+      debug_printf("    cur->Base: %x\n", &cur->Base);
+      debug_printf("    _mesa_get_incomplete_framebuffer(): %x\n", _mesa_get_incomplete_framebuffer());
+      debug_printf("    cur->iface: %x\n", cur->iface);
+   }
 
    /* dummy framebuffers cant be used as st_framebuffer */
    if (cur && &cur->Base != _mesa_get_incomplete_framebuffer() &&
        cur->iface == stfbi) {
       /* reuse the current stfb */
+      debug_printf("    Reusing framebuffer\n");
       st_framebuffer_reference(&stfb, cur);
    }
    else {
       /* create a new one */
+      debug_printf("    Creating new framebuffer\n");
       stfb = st_framebuffer_create(st, stfbi);
    }
 
@@ -809,9 +831,16 @@ st_api_make_current(struct st_api *stapi, struct st_context_iface *stctxi,
    struct st_framebuffer *stdraw, *stread;
    boolean ret;
 
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
+   debug_printf("    st: %x\n", st);
+   debug_printf("    stctxi: %x\n", stctxi);
+   debug_printf("    stdrawi: %x\n", stdrawi);
+   debug_printf("    streadi: %x\n", streadi);
    _glapi_check_multithread();
 
    if (st) {
+       debug_printf("    st->ctx: %x\n", st->ctx);
+       debug_printf("    st->ctx->WinSysDrawBuffer: %x\n", st->ctx->WinSysDrawBuffer);
       /* reuse or create the draw fb */
       stdraw = st_framebuffer_reuse_or_create(st,
             st->ctx->WinSysDrawBuffer, stdrawi);

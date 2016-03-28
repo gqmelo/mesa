@@ -44,6 +44,7 @@
 #include "renderbuffer.h"
 #include "texobj.h"
 #include "glformats.h"
+#include "util/u_debug.h"
 
 
 
@@ -240,6 +241,9 @@ void
 _mesa_reference_framebuffer_(struct gl_framebuffer **ptr,
                              struct gl_framebuffer *fb)
 {
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
+   debug_printf("    *ptr %x\n", *ptr);
+   debug_printf("    fb %x\n", fb);
    if (*ptr) {
       /* unreference old renderbuffer */
       GLboolean deleteFlag = GL_FALSE;
@@ -248,11 +252,14 @@ _mesa_reference_framebuffer_(struct gl_framebuffer **ptr,
       mtx_lock(&oldFb->Mutex);
       assert(oldFb->RefCount > 0);
       oldFb->RefCount--;
+      debug_printf("    oldFb->RefCount: %i\n", oldFb->RefCount);
       deleteFlag = (oldFb->RefCount == 0);
       mtx_unlock(&oldFb->Mutex);
       
-      if (deleteFlag)
+      if (deleteFlag) {
+         debug_printf("    Deleting fb: %x\n", oldFb);
          oldFb->Delete(oldFb);
+      }
 
       *ptr = NULL;
    }
@@ -261,6 +268,7 @@ _mesa_reference_framebuffer_(struct gl_framebuffer **ptr,
    if (fb) {
       mtx_lock(&fb->Mutex);
       fb->RefCount++;
+      debug_printf("    fb->RefCount: %i\n", fb->RefCount);
       mtx_unlock(&fb->Mutex);
       *ptr = fb;
    }

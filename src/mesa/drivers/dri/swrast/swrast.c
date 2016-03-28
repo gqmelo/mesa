@@ -78,6 +78,7 @@ const char * const swrast_renderer_string = "Software Rasterizer";
 static void swrastSetTexBuffer2(__DRIcontext *pDRICtx, GLint target,
 				GLint texture_format, __DRIdrawable *dPriv)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     struct dri_context *dri_ctx;
     int x, y, w, h;
     __DRIscreen *sPriv = dPriv->driScreenPriv;
@@ -116,6 +117,7 @@ static void swrastSetTexBuffer2(__DRIcontext *pDRICtx, GLint target,
 static void swrastSetTexBuffer(__DRIcontext *pDRICtx, GLint target,
 			       __DRIdrawable *dPriv)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     swrastSetTexBuffer2(pDRICtx, target, __DRI_TEXTURE_FORMAT_RGBA, dPriv);
 }
 
@@ -132,6 +134,7 @@ static int
 swrast_query_renderer_integer(__DRIscreen *psp, int param,
 			       unsigned int *value)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    switch (param) {
    case __DRI2_RENDERER_VENDOR_ID:
    case __DRI2_RENDERER_DEVICE_ID:
@@ -186,6 +189,7 @@ swrast_query_renderer_integer(__DRIscreen *psp, int param,
 static int
 swrast_query_renderer_string(__DRIscreen *psp, int param, const char **value)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    switch (param) {
    case __DRI2_RENDERER_VENDOR_ID:
       value[0] = swrast_vendor_string;
@@ -216,6 +220,7 @@ swrastFillInModes(__DRIscreen *psp,
 		  unsigned pixel_bits, unsigned depth_bits,
 		  unsigned stencil_bits, GLboolean have_back_buffer)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     __DRIconfig **configs;
     unsigned depth_buffer_factor;
     unsigned back_buffer_factor;
@@ -286,6 +291,7 @@ swrastFillInModes(__DRIscreen *psp,
 static const __DRIconfig **
 dri_init_screen(__DRIscreen * psp)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     __DRIconfig **configs16, **configs24, **configs32;
 
     TRACE;
@@ -309,6 +315,7 @@ dri_init_screen(__DRIscreen * psp)
 static void
 dri_destroy_screen(__DRIscreen * sPriv)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     TRACE;
     (void) sPriv;
 }
@@ -321,6 +328,7 @@ dri_destroy_screen(__DRIscreen * sPriv)
 static GLuint
 choose_pixel_format(const struct gl_config *v)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     int depth = v->rgbBits;
 
     if (depth == 32
@@ -351,6 +359,7 @@ choose_pixel_format(const struct gl_config *v)
 static void
 swrast_delete_renderbuffer(struct gl_context *ctx, struct gl_renderbuffer *rb)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     struct dri_swrast_renderbuffer *xrb = dri_swrast_renderbuffer(rb);
 
     TRACE;
@@ -363,6 +372,7 @@ swrast_delete_renderbuffer(struct gl_context *ctx, struct gl_renderbuffer *rb)
 static inline int
 bytes_per_line(unsigned pitch_bits, unsigned mul)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    unsigned mask = mul - 1;
 
    return ((pitch_bits + mask) & ~mask) / 8;
@@ -391,6 +401,7 @@ static GLboolean
 swrast_alloc_back_storage(struct gl_context *ctx, struct gl_renderbuffer *rb,
 			  GLenum internalFormat, GLuint width, GLuint height)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     struct dri_swrast_renderbuffer *xrb = dri_swrast_renderbuffer(rb);
 
     TRACE;
@@ -408,6 +419,7 @@ static struct dri_swrast_renderbuffer *
 swrast_new_renderbuffer(const struct gl_config *visual, __DRIdrawable *dPriv,
 			GLboolean front)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     struct dri_swrast_renderbuffer *xrb = calloc(1, sizeof *xrb);
     struct gl_renderbuffer *rb;
     GLuint pixel_format;
@@ -473,6 +485,7 @@ swrast_map_renderbuffer(struct gl_context *ctx,
 			GLubyte **out_map,
 			GLint *out_stride)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    struct dri_swrast_renderbuffer *xrb = dri_swrast_renderbuffer(rb);
    GLubyte *map = xrb->Base.Buffer;
    int cpp = _mesa_get_format_bytes(rb->Format);
@@ -518,6 +531,7 @@ static void
 swrast_unmap_renderbuffer(struct gl_context *ctx,
 			  struct gl_renderbuffer *rb)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    struct dri_swrast_renderbuffer *xrb = dri_swrast_renderbuffer(rb);
 
    if (rb->AllocStorage == swrast_alloc_front_storage) {
@@ -542,6 +556,7 @@ dri_create_buffer(__DRIscreen * sPriv,
 		  __DRIdrawable * dPriv,
 		  const struct gl_config * visual, GLboolean isPixmap)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     struct dri_drawable *drawable = NULL;
     struct gl_framebuffer *fb;
     struct dri_swrast_renderbuffer *frontrb, *backrb;
@@ -601,6 +616,7 @@ drawable_fail:
 static void
 dri_destroy_buffer(__DRIdrawable * dPriv)
 {
+	debug_printf("swrast.c:%s\n", __PRETTY_FUNCTION__);
     TRACE;
 
     if (dPriv) {
@@ -619,6 +635,7 @@ dri_destroy_buffer(__DRIdrawable * dPriv)
 static void
 dri_swap_buffers(__DRIdrawable * dPriv)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     __DRIscreen *sPriv = dPriv->driScreenPriv;
 
     GET_CURRENT_CONTEXT(ctx);
@@ -662,6 +679,7 @@ dri_swap_buffers(__DRIdrawable * dPriv)
 static void
 get_window_size( struct gl_framebuffer *fb, GLsizei *w, GLsizei *h )
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     __DRIdrawable *dPriv = swrast_drawable(fb)->dPriv;
     __DRIscreen *sPriv = dPriv->driScreenPriv;
     int x, y;
@@ -674,6 +692,7 @@ get_window_size( struct gl_framebuffer *fb, GLsizei *w, GLsizei *h )
 static void
 swrast_check_and_update_window_size( struct gl_context *ctx, struct gl_framebuffer *fb )
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     GLsizei width, height;
 
     get_window_size(fb, &width, &height);
@@ -685,6 +704,7 @@ swrast_check_and_update_window_size( struct gl_context *ctx, struct gl_framebuff
 static const GLubyte *
 get_string(struct gl_context *ctx, GLenum pname)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     (void) ctx;
     switch (pname) {
 	case GL_VENDOR:
@@ -699,6 +719,7 @@ get_string(struct gl_context *ctx, GLenum pname)
 static void
 update_state( struct gl_context *ctx, GLuint new_state )
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     /* not much to do here - pass it on */
     _swrast_InvalidateState( ctx, new_state );
     _swsetup_InvalidateState( ctx, new_state );
@@ -709,6 +730,7 @@ update_state( struct gl_context *ctx, GLuint new_state )
 static void
 viewport(struct gl_context *ctx)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     struct gl_framebuffer *draw = ctx->WinSysDrawBuffer;
     struct gl_framebuffer *read = ctx->WinSysReadBuffer;
 
@@ -722,6 +744,7 @@ static mesa_format swrastChooseTextureFormat(struct gl_context * ctx,
 					   GLenum format,
 					   GLenum type)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     if (internalFormat == GL_RGB)
 	return MESA_FORMAT_B8G8R8X8_UNORM;
     return _mesa_choose_tex_format(ctx, target, internalFormat, format, type);
@@ -730,6 +753,7 @@ static mesa_format swrastChooseTextureFormat(struct gl_context * ctx,
 static void
 swrast_init_driver_functions(struct dd_function_table *driver)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     driver->GetString = get_string;
     driver->UpdateState = update_state;
     driver->Viewport = viewport;
@@ -753,6 +777,7 @@ dri_create_context(gl_api api,
 		   unsigned *error,
 		   void *sharedContextPrivate)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     struct dri_context *ctx = NULL;
     struct dri_context *share = (struct dri_context *)sharedContextPrivate;
     struct gl_context *mesaCtx = NULL;
@@ -826,6 +851,7 @@ context_fail:
 static void
 dri_destroy_context(__DRIcontext * cPriv)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     TRACE;
 
     if (cPriv) {
@@ -848,6 +874,7 @@ dri_make_current(__DRIcontext * cPriv,
 		 __DRIdrawable * driDrawPriv,
 		 __DRIdrawable * driReadPriv)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     struct gl_context *mesaCtx;
     struct gl_framebuffer *mesaDraw;
     struct gl_framebuffer *mesaRead;
@@ -895,6 +922,7 @@ dri_make_current(__DRIcontext * cPriv,
 static GLboolean
 dri_unbind_context(__DRIcontext * cPriv)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     TRACE;
     (void) cPriv;
 
@@ -908,6 +936,7 @@ static void
 dri_copy_sub_buffer(__DRIdrawable *dPriv, int x, int y,
                     int w, int h)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
     __DRIscreen *sPriv = dPriv->driScreenPriv;
     void *data;
     int iy;
@@ -967,6 +996,7 @@ static const __DRIextension *swrast_driver_extensions[] = {
 
 PUBLIC const __DRIextension **__driDriverGetExtensions_swrast(void)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    globalDriverAPI = &swrast_driver_api;
 
    return swrast_driver_extensions;

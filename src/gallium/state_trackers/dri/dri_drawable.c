@@ -60,6 +60,7 @@ dri_st_framebuffer_validate(struct st_context_iface *stctx,
       drawable->stvis.samples > 1 ? drawable->msaa_textures
                                   : drawable->textures;
 
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
    statt_mask = 0x0;
    for (i = 0; i < count; i++)
       statt_mask |= (1 << statts[i]);
@@ -128,6 +129,9 @@ dri_create_buffer(__DRIscreen * sPriv,
 		  __DRIdrawable * dPriv,
 		  const struct gl_config * visual, boolean isPixmap)
 {
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
+   debug_printf("    sPriv: %x\n", sPriv);
+   debug_printf("    dPriv: %x\n", dPriv);
    struct dri_screen *screen = sPriv->driverPrivate;
    struct dri_drawable *drawable = NULL;
 
@@ -154,7 +158,9 @@ dri_create_buffer(__DRIscreen * sPriv,
       drawable->desired_fences = DRI_SWAP_FENCES_MAX;
 
    dPriv->driverPrivate = (void *)drawable;
+   debug_printf("    dPriv->driverPrivate: %x\n", dPriv->driverPrivate);
    p_atomic_set(&drawable->base.stamp, 1);
+   debug_printf("    drawable->base.stamp: %i\n", p_atomic_read(&drawable->base.stamp));
 
    return GL_TRUE;
 fail:
@@ -165,6 +171,7 @@ fail:
 void
 dri_destroy_buffer(__DRIdrawable * dPriv)
 {
+   debug_printf("dri_destroy_buffer\n");
    struct dri_drawable *drawable = dri_drawable(dPriv);
    int i;
 

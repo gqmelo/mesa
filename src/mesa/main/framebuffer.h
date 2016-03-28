@@ -27,6 +27,7 @@
 #define FRAMEBUFFER_H
 
 #include "glheader.h"
+#include "util/u_debug.h"
 
 struct gl_config;
 struct gl_context;
@@ -59,6 +60,7 @@ static inline void
 _mesa_reference_framebuffer(struct gl_framebuffer **ptr,
                             struct gl_framebuffer *fb)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    if (*ptr != fb)
       _mesa_reference_framebuffer_(ptr, fb);
 }

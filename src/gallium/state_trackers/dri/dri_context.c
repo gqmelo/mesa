@@ -171,6 +171,7 @@ void
 dri_destroy_context(__DRIcontext * cPriv)
 {
    struct dri_context *ctx = dri_context(cPriv);
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
 
    if (ctx->hud) {
       hud_destroy(ctx->hud);
@@ -197,6 +198,8 @@ dri_unbind_context(__DRIcontext * cPriv)
    struct dri_context *ctx = dri_context(cPriv);
    struct st_api *stapi = screen->st_api;
 
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
+
    if (--ctx->bind_count == 0) {
       if (ctx->st == ctx->stapi->get_current(ctx->stapi)) {
          /* For conformance, unbind is supposed to flush the context.
@@ -216,11 +219,21 @@ dri_make_current(__DRIcontext * cPriv,
 		 __DRIdrawable * driDrawPriv,
 		 __DRIdrawable * driReadPriv)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    /* dri_util.c ensures cPriv is not null */
    struct dri_context *ctx = dri_context(cPriv);
    struct dri_drawable *draw = dri_drawable(driDrawPriv);
    struct dri_drawable *read = dri_drawable(driReadPriv);
    struct st_context_iface *old_st = ctx->stapi->get_current(ctx->stapi);
+
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
+   debug_printf("    cPriv: %x\n", cPriv);
+   debug_printf("    driDrawPriv: %x\n", driDrawPriv);
+   debug_printf("    driReadPriv: %x\n", driReadPriv);
+   debug_printf("    ctx: %x\n", ctx);
+   debug_printf("    draw: %x\n", draw);
+   debug_printf("    read: %x\n", read);
+   debug_printf("    old_st: %x\n", old_st);
 
    /* Flush the old context here so we don't have to flush on unbind() */
    if (old_st && old_st != ctx->st)

@@ -84,6 +84,7 @@
 #include "main/enums.h"
 #include "main/glformats.h"
 #include "util/ralloc.h"
+#include "util/u_debug.h"
 
 /** Return offset in bytes of the field within a vertex struct */
 #define OFFSET(FIELD) ((void *) offsetof(struct vertex, FIELD))
@@ -436,6 +437,7 @@ _mesa_meta_init(struct gl_context *ctx)
 void
 _mesa_meta_free(struct gl_context *ctx)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    GET_CURRENT_CONTEXT(old_context);
    _mesa_make_current(ctx, NULL, NULL);
    _mesa_meta_glsl_blit_cleanup(ctx, &ctx->Meta->Blit);

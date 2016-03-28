@@ -137,6 +137,7 @@
 #include "main/dispatch.h" /* for _gloffset_COUNT */
 #include "uniforms.h"
 #include "macros.h"
+#include "util/u_debug.h"
 
 #ifdef USE_SPARC_ASM
 #include "sparc/sparc.h"
@@ -1147,6 +1148,7 @@ _mesa_initialize_context(struct gl_context *ctx,
                          struct gl_context *share_list,
                          const struct dd_function_table *driverFunctions)
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    struct gl_shared_state *shared;
    int i;
 
@@ -1313,6 +1315,7 @@ _mesa_create_context(gl_api api,
 void
 _mesa_free_context_data( struct gl_context *ctx )
 {
+	debug_printf("%s\n", __PRETTY_FUNCTION__);
    if (!_mesa_get_current_context()){
       /* No current context, but we may need one in order to delete
        * texture objs, etc.  So temporarily bind the context now.
@@ -1669,6 +1672,9 @@ _mesa_make_current( struct gl_context *newCtx,
                     struct gl_framebuffer *readBuffer )
 {
    GET_CURRENT_CONTEXT(curCtx);
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
+   debug_printf("    newCtx: %x\n", newCtx);
+   debug_printf("    curCtx: %x\n", curCtx);
 
    if (MESA_VERBOSE & VERBOSE_API)
       _mesa_debug(newCtx, "_mesa_make_current()\n");

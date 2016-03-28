@@ -56,7 +56,7 @@ get_drawable_info(__DRIdrawable *dPriv, int *x, int *y, int *w, int *h)
 {
    __DRIscreen *sPriv = dPriv->driScreenPriv;
    const __DRIswrastLoaderExtension *loader = sPriv->swrast_loader;
-
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
    loader->getDrawableInfo(dPriv,
                            x, y, w, h,
                            dPriv->loaderPrivate);
@@ -117,6 +117,7 @@ drisw_update_drawable_info(struct dri_drawable *drawable)
    __DRIdrawable *dPriv = drawable->dPriv;
    int x, y;
 
+   debug_printf("%s\n", __PRETTY_FUNCTION__);
    get_drawable_info(dPriv, &x, &y, &dPriv->w, &dPriv->h);
 }
 
